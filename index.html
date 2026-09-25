@@ -9,7 +9,6 @@
   <style>
     :root {
       --gruen: #245a31;
-      --gruen-dunkel: #173c20;
       --gruen-hell: #e6f1e7;
       --gelb: #efe34d;
       --grau: #f1f3f2;
@@ -31,9 +30,9 @@
     }
 
     header {
-      padding: 18px 16px 15px;
-      border-bottom: 5px solid var(--gruen);
       background: var(--gelb);
+      border-bottom: 5px solid var(--gruen);
+      padding: 18px 16px 15px;
       text-align: center;
     }
 
@@ -65,7 +64,7 @@
       background: #fff;
       color: #38423b;
       font-size: 14px;
-      line-height: 1.45;
+      line-height: 1.4;
     }
 
     .grid {
@@ -75,9 +74,9 @@
 
     .karte {
       overflow: hidden;
+      background: #fff;
       border: 1px solid var(--linie);
       border-radius: 14px;
-      background: #fff;
       box-shadow: 0 2px 9px rgba(0, 0, 0, 0.07);
     }
 
@@ -95,10 +94,10 @@
 
     .zeile {
       display: grid;
-      grid-template-columns: minmax(125px, 1fr) minmax(110px, 140px) 80px;
+      grid-template-columns: minmax(130px, 1fr) minmax(100px, 130px) 84px;
       align-items: center;
       gap: 8px;
-      min-height: 50px;
+      min-height: 48px;
       border-bottom: 1px solid #edf0ee;
     }
 
@@ -107,20 +106,20 @@
     }
 
     .bezeichnung {
-      font-size: 14px;
       font-weight: 700;
+      font-size: 14px;
     }
 
     .symbol {
-      margin-left: 4px;
       color: #56605a;
       font-style: italic;
       font-weight: 500;
+      margin-left: 4px;
     }
 
     input {
       width: 100%;
-      min-height: 39px;
+      min-height: 38px;
       padding: 7px 8px;
       border: 2px solid #94ad98;
       border-radius: 7px;
@@ -138,12 +137,12 @@
 
     .einheit {
       color: var(--hinweis);
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 700;
     }
 
     .wert {
-      min-height: 39px;
+      min-height: 38px;
       padding: 8px;
       border-radius: 7px;
       background: #f5f7f5;
@@ -153,17 +152,23 @@
       text-align: right;
     }
 
-    .wertgruppe {
-      display: grid;
-      grid-template-columns: minmax(92px, 1fr) 74px;
-      align-items: center;
-      gap: 7px;
-    }
-
     .gegenwinkel {
       color: var(--hinweis);
       font-size: 13px;
       text-align: right;
+    }
+
+    .doppelwert {
+      display: grid;
+      grid-template-columns: minmax(100px, 1fr) 84px;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .unbekannt {
+      color: #7b817d;
+      font-size: 14px;
+      font-weight: 600;
     }
 
     .aktionsbereich {
@@ -185,7 +190,7 @@
 
     button:active {
       transform: translateY(1px);
-      background: var(--gruen-dunkel);
+      background: #173c20;
     }
 
     .status {
@@ -195,12 +200,7 @@
       background: var(--gruen-hell);
       color: #1c4826;
       font-size: 13px;
-      line-height: 1.45;
-    }
-
-    .warnung {
-      background: #fff0ef;
-      color: #8a2419;
+      line-height: 1.4;
     }
 
     footer {
@@ -212,7 +212,7 @@
 
     @media (max-width: 430px) {
       .zeile {
-        grid-template-columns: minmax(104px, 1fr) minmax(95px, 119px) 60px;
+        grid-template-columns: minmax(106px, 1fr) minmax(90px, 115px) 64px;
       }
 
       .bezeichnung {
@@ -222,15 +222,6 @@
       .gegenwinkel,
       .einheit {
         font-size: 12px;
-      }
-
-      .wertgruppe {
-        grid-template-columns: minmax(78px, 1fr) 58px;
-        gap: 4px;
-      }
-
-      .wert {
-        font-size: 16px;
       }
     }
   </style>
@@ -244,8 +235,8 @@
 
   <main>
     <p class="info">
-      Eingabefelder sind grün. Angezeigt werden die Hauptwinkel wie in deiner
-      Excel-Vorlage sowie der zugehörige Gegenwinkel in Klammern.
+      Eingaben in Grün. Die App berechnet automatisch beim Antippen von
+      „Berechnen“ sowie nach dem Ändern eines Eingabewerts.
     </p>
 
     <div class="grid">
@@ -262,13 +253,13 @@
           <div class="zeile">
             <div class="bezeichnung">Steigungswinkel <span class="symbol">σ</span></div>
             <input id="steigung" type="number" min="0.01" max="89.99" step="0.01" value="75" inputmode="decimal">
-            <div class="gegenwinkel" id="gegenSteigung">–</div>
+            <div class="gegenwinkel" id="gegenSteigung">15,00°</div>
           </div>
 
           <div class="zeile">
             <div class="bezeichnung">Anschlusswinkel <span class="symbol">α</span></div>
             <input id="anschluss" type="number" min="0.01" max="179.99" step="0.01" value="90" inputmode="decimal">
-            <div class="gegenwinkel" id="gegenAnschluss">–</div>
+            <div class="gegenwinkel" id="gegenAnschluss">90,00°</div>
           </div>
         </div>
 
@@ -283,8 +274,8 @@
         <div class="inhalt">
           <div class="zeile">
             <div class="bezeichnung">Gehrungswinkel <span class="symbol">γ</span></div>
-            <div class="wertgruppe">
-              <div class="wert" id="gehrung">–</div>
+            <div class="doppelwert">
+              <div class="wert unbekannt" id="gehrung">–</div>
               <div class="gegenwinkel" id="gegenGehrung">–</div>
             </div>
             <div class="einheit">°</div>
@@ -292,8 +283,8 @@
 
           <div class="zeile">
             <div class="bezeichnung">Flächenwinkel <span class="symbol">φ</span></div>
-            <div class="wertgruppe">
-              <div class="wert" id="flaechenwinkel">–</div>
+            <div class="doppelwert">
+              <div class="wert unbekannt" id="flaechenwinkel">–</div>
               <div class="gegenwinkel" id="gegenFlaechenwinkel">–</div>
             </div>
             <div class="einheit">°</div>
@@ -301,8 +292,8 @@
 
           <div class="zeile">
             <div class="bezeichnung">Eckwinkel <span class="symbol">ε</span></div>
-            <div class="wertgruppe">
-              <div class="wert" id="eckwinkel">–</div>
+            <div class="doppelwert">
+              <div class="wert unbekannt" id="eckwinkel">–</div>
               <div class="gegenwinkel" id="gegenEckwinkel">–</div>
             </div>
             <div class="einheit">°</div>
@@ -316,13 +307,13 @@
 
           <div class="zeile">
             <div class="bezeichnung">Bodenlinie <span class="symbol">b</span></div>
-            <div class="wert" id="bodenlinieB">–</div>
+            <div class="wert unbekannt" id="bodenlinieB">–</div>
             <div class="einheit">mm</div>
           </div>
 
           <div class="zeile">
             <div class="bezeichnung">Schrägenstrecke <span class="symbol">s</span></div>
-            <div class="wert" id="schraegenstrecke">–</div>
+            <div class="wert unbekannt" id="schraegenstrecke">–</div>
             <div class="einheit">mm</div>
           </div>
 
@@ -334,118 +325,90 @@
 
           <div class="zeile">
             <div class="bezeichnung">Gratlänge <span class="symbol">g</span></div>
-            <div class="wert" id="gratlaenge">–</div>
+            <div class="wert unbekannt" id="gratlaenge">–</div>
             <div class="einheit">mm</div>
           </div>
         </div>
       </section>
     </div>
 
-    <p class="status" id="status">Bereit.</p>
+    <p class="status" id="status">
+      Bereit. Sicher berechnet werden derzeit die Gegenwinkel, Bodenlinie a und Flächenlänge f.
+    </p>
 
     <footer>
-      Version 1 · gleiche Steigung beider Flächen
+      Schifterschnitt-Rechner · Rechenversion 1
     </footer>
   </main>
 
   <script>
-    const PI = Math.PI;
+    const degZuRad = grad => grad * Math.PI / 180;
 
-    function rad(grad) {
-      return grad * PI / 180;
-    }
-
-    function grad(bogenmass) {
-      return bogenmass * 180 / PI;
-    }
-
-    function begrenze(x, minimum, maximum) {
-      return Math.min(maximum, Math.max(minimum, x));
-    }
-
-    function leseZahl(id) {
+    function zahlLesen(id) {
       return Number(document.getElementById(id).value);
     }
 
-    function formatiere(wert, einheit = "") {
+    function formatZahl(wert, einheit = "") {
       return wert.toLocaleString("de-DE", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
       }) + einheit;
     }
 
-    function setze(id, wert, einheit = "") {
-      document.getElementById(id).textContent = formatiere(wert, einheit);
+    function wertSetzen(id, wert, einheit = "") {
+      const element = document.getElementById(id);
+      element.textContent = formatZahl(wert, einheit);
+      element.classList.remove("unbekannt");
+    }
+
+    function leeren(id) {
+      const element = document.getElementById(id);
+      element.textContent = "–";
+      element.classList.add("unbekannt");
     }
 
     function berechne() {
-      const h = leseZahl("hoehe");
-      const sigma = leseZahl("steigung");
-      const alpha = leseZahl("anschluss");
+      const h = zahlLesen("hoehe");
+      const sigma = zahlLesen("steigung");
+      const alpha = zahlLesen("anschluss");
+
       const status = document.getElementById("status");
 
       if (!Number.isFinite(h) || !Number.isFinite(sigma) || !Number.isFinite(alpha) ||
           h <= 0 || sigma <= 0 || sigma >= 90 || alpha <= 0 || alpha >= 180) {
-        status.classList.add("warnung");
         status.textContent =
-          "Ungültige Eingabe: Höhe muss größer als 0 sein; Steigung zwischen 0° und 90°; Anschlusswinkel zwischen 0° und 180°.";
+          "Bitte gültige Werte eingeben: Höhe größer 0 mm, Steigungswinkel zwischen 0° und 90°, Anschlusswinkel zwischen 0° und 180°.";
         return;
       }
 
-      status.classList.remove("warnung");
-
-      const s = rad(sigma);
-      const a = rad(alpha);
+      const sigmaRad = degZuRad(sigma);
 
       const gegenSigma = 90 - sigma;
       const gegenAlpha = 180 - alpha;
 
-      setze("gegenSteigung", gegenSigma, "°");
-      setze("gegenAnschluss", gegenAlpha, "°");
+      document.getElementById("gegenSteigung").textContent = formatZahl(gegenSigma, "°");
+      document.getElementById("gegenAnschluss").textContent = formatZahl(gegenAlpha, "°");
 
-      const bodenlinieA = h / Math.tan(s);
-      const flaechenlaenge = h / Math.sin(s);
+      const a = h / Math.tan(sigmaRad);
+      const f = h / Math.sin(sigmaRad);
 
-      const bodenlinieB = bodenlinieA / Math.sin(a);
-      const gratlaenge = Math.sqrt(h * h + bodenlinieB * bodenlinieB);
-      const schraegenstrecke = Math.abs(bodenlinieB * Math.cos(a));
+      wertSetzen("bodenlinieA", a, " mm");
+      wertSetzen("flaechenlaenge", f, " mm");
 
-      const cosZweiGamma =
-        Math.sin(s) * Math.sin(s) -
-        Math.cos(s) * Math.cos(s) * Math.cos(a);
-
-      const kleinerGehrungswinkel =
-        grad(0.5 * Math.acos(begrenze(cosZweiGamma, -1, 1)));
-
-      const gehrungswinkel = 90 - kleinerGehrungswinkel;
-
-      const kleinerFlaechenwinkel =
-        grad(Math.atan(Math.tan(s) / Math.sin(a)));
-
-      const flaechenwinkel = 90 - kleinerFlaechenwinkel;
-
-      const kleinerEckwinkel =
-        grad(Math.atan(Math.sin(s) / Math.tan(a / 2)));
-
-      const eckwinkel = 90 - kleinerEckwinkel;
-
-      setze("gehrung", gehrungswinkel, "°");
-      setze("gegenGehrung", 90 - gehrungswinkel, "°");
-
-      setze("flaechenwinkel", flaechenwinkel, "°");
-      setze("gegenFlaechenwinkel", 90 - flaechenwinkel, "°");
-
-      setze("eckwinkel", eckwinkel, "°");
-      setze("gegenEckwinkel", 90 - eckwinkel, "°");
-
-      setze("bodenlinieA", bodenlinieA, " mm");
-      setze("bodenlinieB", bodenlinieB, " mm");
-      setze("schraegenstrecke", schraegenstrecke, " mm");
-      setze("flaechenlaenge", flaechenlaenge, " mm");
-      setze("gratlaenge", gratlaenge, " mm");
+      [
+        "gehrung",
+        "gegenGehrung",
+        "flaechenwinkel",
+        "gegenFlaechenwinkel",
+        "eckwinkel",
+        "gegenEckwinkel",
+        "bodenlinieB",
+        "schraegenstrecke",
+        "gratlaenge"
+      ].forEach(leeren);
 
       status.textContent =
-        "Berechnung abgeschlossen. Bitte prüfe die Werte zunächst immer an Probeholz und vergleiche die ersten Anwendungen mit deiner Excel-Vorlage.";
+        "Berechnet: Gegenwinkel, Bodenlinie a und Flächenlänge f. Die vollständige Schiftergeometrie wird im nächsten Schritt gegen deine Excel-Kontrollwerte ergänzt.";
     }
 
     document.getElementById("berechnen").addEventListener("click", berechne);
