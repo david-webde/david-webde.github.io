@@ -3,10 +3,421 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#245a31">
   <title>Schifterschnitt-Rechner</title>
+
+  <style>
+    :root {
+      --gruen: #245a31;
+      --gruen-hell: #e6f1e7;
+      --gelb: #efe34d;
+      --grau: #f1f3f2;
+      --linie: #d7ddda;
+      --text: #1f2922;
+      --hinweis: #69736c;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--grau);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    header {
+      background: var(--gelb);
+      border-bottom: 5px solid var(--gruen);
+      padding: 18px 16px 15px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: clamp(24px, 7vw, 38px);
+      line-height: 1.05;
+      letter-spacing: 0.3px;
+    }
+
+    header p {
+      margin: 7px 0 0;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .info {
+      margin: 0 0 16px;
+      padding: 12px 14px;
+      border-left: 5px solid var(--gruen);
+      border-radius: 8px;
+      background: #fff;
+      color: #38423b;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .karte {
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid var(--linie);
+      border-radius: 14px;
+      box-shadow: 0 2px 9px rgba(0, 0, 0, 0.07);
+    }
+
+    .kartenkopf {
+      padding: 11px 14px;
+      background: var(--gruen);
+      color: #fff;
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .inhalt {
+      padding: 12px;
+    }
+
+    .zeile {
+      display: grid;
+      grid-template-columns: minmax(130px, 1fr) minmax(100px, 130px) 84px;
+      align-items: center;
+      gap: 8px;
+      min-height: 48px;
+      border-bottom: 1px solid #edf0ee;
+    }
+
+    .zeile:last-child {
+      border-bottom: 0;
+    }
+
+    .bezeichnung {
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .symbol {
+      color: #56605a;
+      font-style: italic;
+      font-weight: 500;
+      margin-left: 4px;
+    }
+
+    input {
+      width: 100%;
+      min-height: 38px;
+      padding: 7px 8px;
+      border: 2px solid #94ad98;
+      border-radius: 7px;
+      background: #eff8ee;
+      color: #17371e;
+      font-size: 17px;
+      font-weight: 800;
+      text-align: right;
+    }
+
+    input:focus {
+      outline: 3px solid rgba(36, 90, 49, 0.20);
+      border-color: var(--gruen);
+    }
+
+    .einheit {
+      color: var(--hinweis);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .wert {
+      min-height: 38px;
+      padding: 8px;
+      border-radius: 7px;
+      background: #f5f7f5;
+      color: var(--gruen);
+      font-size: 17px;
+      font-weight: 800;
+      text-align: right;
+    }
+
+    .gegenwinkel {
+      color: var(--hinweis);
+      font-size: 13px;
+      text-align: right;
+    }
+
+    .doppelwert {
+      display: grid;
+      grid-template-columns: minmax(100px, 1fr) 84px;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .unbekannt {
+      color: #7b817d;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .aktionsbereich {
+      padding: 16px 12px 2px;
+    }
+
+    button {
+      width: 100%;
+      min-height: 48px;
+      border: 0;
+      border-radius: 10px;
+      background: var(--gruen);
+      color: #fff;
+      font-size: 17px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    button:active {
+      transform: translateY(1px);
+      background: #173c20;
+    }
+
+    .status {
+      margin: 15px 0 0;
+      padding: 11px 12px;
+      border-radius: 8px;
+      background: var(--gruen-hell);
+      color: #1c4826;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    footer {
+      padding: 18px 0 30px;
+      color: #778078;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    @media (max-width: 430px) {
+      .zeile {
+        grid-template-columns: minmax(106px, 1fr) minmax(90px, 115px) 64px;
+      }
+
+      .bezeichnung {
+        font-size: 13px;
+      }
+
+      .gegenwinkel,
+      .einheit {
+        font-size: 12px;
+      }
+    }
+  </style>
 </head>
+
 <body>
-  <h1>Schifterschnitt-Rechner</h1>
-  <p>Die Testseite ist online.</p>
+  <header>
+    <h1>Schifterschnitt-Berechnung</h1>
+    <p>Für zwei Flächen mit gleichem Steigungswinkel</p>
+  </header>
+
+  <main>
+    <p class="info">
+      Eingaben in Grün. Die App berechnet automatisch beim Antippen von
+      „Berechnen“ sowie nach dem Ändern eines Eingabewerts.
+    </p>
+
+    <div class="grid">
+      <section class="karte">
+        <div class="kartenkopf">Eingaben</div>
+
+        <div class="inhalt">
+          <div class="zeile">
+            <div class="bezeichnung">Höhe <span class="symbol">h</span></div>
+            <input id="hoehe" type="number" min="0.01" step="0.01" value="500" inputmode="decimal">
+            <div class="einheit">mm</div>
+          </div>
+
+          <div class="zeile">
+            <div class="bezeichnung">Steigungswinkel <span class="symbol">σ</span></div>
+            <input id="steigung" type="number" min="0.01" max="89.99" step="0.01" value="75" inputmode="decimal">
+            <div class="gegenwinkel" id="gegenSteigung">15,00°</div>
+          </div>
+
+          <div class="zeile">
+            <div class="bezeichnung">Anschlusswinkel <span class="symbol">α</span></div>
+            <input id="anschluss" type="number" min="0.01" max="179.99" step="0.01" value="90" inputmode="decimal">
+            <div class="gegenwinkel" id="gegenAnschluss">90,00°</div>
+          </div>
+        </div>
+
+        <div class="aktionsbereich">
+          <button type="button" id="berechnen">Berechnen</button>
+        </div>
+      </section>
+
+      <section class="karte">
+        <div class="kartenkopf">Ausgaben</div>
+
+        <div class="inhalt">
+          <div class="zeile">
+            <div class="bezeichnung">Gehrungswinkel <span class="symbol">γ</span></div>
+            <div class="doppelwert">
+              <div class="wert unbekannt" id="gehrung">–</div>
+              <div class="gegenwinkel" id="gegenGehrung">–</div>
+            </div>
+            <div class="einheit">°</div>
+          </div>
+
+          <div class="zeile">
+            <div class="bezeichnung">Flächenwinkel <span class="symbol">φ</span></div>
+            <div class="doppelwert">
+              <div class="wert unbekannt" id="flaechenwinkel">–</div>
+              <div class="gegenwinkel" id="gegenFlaechenwinkel">–</div>
+            </div>
+            <div class="einheit">°</div>
+          </div>
+
+          <div class="zeile">
+            <div class="bezeichnung">Eckwinkel <span class="symbol">ε</span></div>
+            <div class="doppelwert">
+              <div class="wert unbekannt" id="eckwinkel">–</div>
+              <div class="gegenwinkel" id="gegenEckwinkel">–</div>
+            </div>
+            <div class="einheit">°</div>
+          </div>
+
+          <div class="zeile">
+            <div class="bezeichnung">Bodenlinie <span class="symbol">a</span></div>
+            <div class="wert" id="bodenlinieA">–</div>
+            <div class="einheit">mm</div>
+          </div>
+
+          <div class="zeile">
+            <div class="bezeichnung">Bodenlinie <span class="symbol">b</span></div>
+            <div class="wert unbekannt" id="bodenlinieB">–</div>
+            <div class="einheit">mm</div>
+          </div>
+
+          <div class="zeile">
+            <div class="bezeichnung">Schrägenstrecke <span class="symbol">s</span></div>
+            <div class="wert unbekannt" id="schraegenstrecke">–</div>
+            <div class="einheit">mm</div>
+          </div>
+
+          <div class="zeile">
+            <div class="bezeichnung">Flächenlänge <span class="symbol">f</span></div>
+            <div class="wert" id="flaechenlaenge">–</div>
+            <div class="einheit">mm</div>
+          </div>
+
+          <div class="zeile">
+            <div class="bezeichnung">Gratlänge <span class="symbol">g</span></div>
+            <div class="wert unbekannt" id="gratlaenge">–</div>
+            <div class="einheit">mm</div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <p class="status" id="status">
+      Bereit. Sicher berechnet werden derzeit die Gegenwinkel, Bodenlinie a und Flächenlänge f.
+    </p>
+
+    <footer>
+      Schifterschnitt-Rechner · Rechenversion 1
+    </footer>
+  </main>
+
+  <script>
+    const degZuRad = grad => grad * Math.PI / 180;
+
+    function zahlLesen(id) {
+      return Number(document.getElementById(id).value);
+    }
+
+    function formatZahl(wert, einheit = "") {
+      return wert.toLocaleString("de-DE", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }) + einheit;
+    }
+
+    function wertSetzen(id, wert, einheit = "") {
+      const element = document.getElementById(id);
+      element.textContent = formatZahl(wert, einheit);
+      element.classList.remove("unbekannt");
+    }
+
+    function leeren(id) {
+      const element = document.getElementById(id);
+      element.textContent = "–";
+      element.classList.add("unbekannt");
+    }
+
+    function berechne() {
+      const h = zahlLesen("hoehe");
+      const sigma = zahlLesen("steigung");
+      const alpha = zahlLesen("anschluss");
+
+      const status = document.getElementById("status");
+
+      if (!Number.isFinite(h) || !Number.isFinite(sigma) || !Number.isFinite(alpha) ||
+          h <= 0 || sigma <= 0 || sigma >= 90 || alpha <= 0 || alpha >= 180) {
+        status.textContent =
+          "Bitte gültige Werte eingeben: Höhe größer 0 mm, Steigungswinkel zwischen 0° und 90°, Anschlusswinkel zwischen 0° und 180°.";
+        return;
+      }
+
+      const sigmaRad = degZuRad(sigma);
+
+      const gegenSigma = 90 - sigma;
+      const gegenAlpha = 180 - alpha;
+
+      document.getElementById("gegenSteigung").textContent = formatZahl(gegenSigma, "°");
+      document.getElementById("gegenAnschluss").textContent = formatZahl(gegenAlpha, "°");
+
+      const a = h / Math.tan(sigmaRad);
+      const f = h / Math.sin(sigmaRad);
+
+      wertSetzen("bodenlinieA", a, " mm");
+      wertSetzen("flaechenlaenge", f, " mm");
+
+      [
+        "gehrung",
+        "gegenGehrung",
+        "flaechenwinkel",
+        "gegenFlaechenwinkel",
+        "eckwinkel",
+        "gegenEckwinkel",
+        "bodenlinieB",
+        "schraegenstrecke",
+        "gratlaenge"
+      ].forEach(leeren);
+
+      status.textContent =
+        "Berechnet: Gegenwinkel, Bodenlinie a und Flächenlänge f. Die vollständige Schiftergeometrie wird im nächsten Schritt gegen deine Excel-Kontrollwerte ergänzt.";
+    }
+
+    document.getElementById("berechnen").addEventListener("click", berechne);
+
+    ["hoehe", "steigung", "anschluss"].forEach(id => {
+      document.getElementById(id).addEventListener("input", berechne);
+    });
+
+    berechne();
+  </script>
 </body>
 </html>
